@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-set(project_name json)
+set(project_name json++)
 project(${project_name})
 
 add_compile_options("-Wall" "-Wextra")
@@ -11,11 +11,11 @@ set(CMAKE_BUILD_TYPE Debug)
 set(project_dir "./code")
 include_directories("${project_dir}/include")
 
-file(GLOB SOURCES "${project_dir}/${project_name}/*.cpp")
-add_library(code_objects OBJECT ${SOURCES})
+file(GLOB SOURCES "${project_dir}/json/*.cpp")
+add_library(${project_name} STATIC ${SOURCES})
 
-add_executable(${project_name}.out ${project_dir}/main.cpp)
-target_link_libraries(${project_name}.out code_objects)
+add_executable(main.out ${project_dir}/main.cpp)
+target_link_libraries(main.out json++)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/testcase)
