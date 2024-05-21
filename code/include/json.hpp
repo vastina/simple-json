@@ -1,9 +1,28 @@
+#ifndef _VAS_JSON_H_
+#define _VAS_JSON_H_
 
-#include <type_traits>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <vector>
+
+#include <cstdint>
 
 namespace vastina {
 
-enum class j_type{
+using i32 = std::int32_t;
+using u32 = std::uint32_t;
+using i64 = std::int64_t;
+using std::make_shared;
+using std::shared_ptr;
+using std::string;
+using std::string_view;
+
+namespace json {
+
+enum class j_type
+{
   object,
   array,
   string,
@@ -24,3 +43,7 @@ public:
 };
 
 }
+
+}; //namespace vastina
+
+#endif
