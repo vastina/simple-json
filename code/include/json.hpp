@@ -31,15 +31,57 @@ enum class j_type
   null
 };
 
-// template<auto V>
-// concept is_j_type = std::is_same_v<decltype(V), j_type>;
+enum j_Parse
+{
+  standard,
+  comment
+};
 
-template<const j_type V>
-//requires is_j_type<V>
-class j_data {
+class json;
 
-public:
-  constexpr decltype( auto ) getType() const { return V; }
+using array = std::vector<json>;
+using object = std::unordered_map<string_view, json>;
+
+class j_value
+{};
+
+template<j_type type, typename ty>
+class value_wrapper
+{};
+
+class j_integer final : public value_wrapper<j_type::number, i64>
+{};
+
+class j_double final : public value_wrapper<j_type::number, double>
+{};
+
+class j_obj final : public value_wrapper<j_type::object, object>
+{};
+
+class j_array final : public value_wrapper<j_type::array, array>
+{};
+
+class j_str final : public value_wrapper<j_type::string, string>
+{};
+
+class j_boolean final : public value_wrapper<j_type::boolean, bool>
+{};
+
+class j_NULL final : public value_wrapper<j_type::null, std::nullptr_t>
+{};
+
+struct constant
+{
+  constexpr static j_boolean j_true {};
+  constexpr static j_boolean j_false {};
+  constexpr static j_NULL j_null {};
+};
+
+class json final
+{
+
+private:
+  shared_ptr<j_value> _M_ptr;
 };
 
 }

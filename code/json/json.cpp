@@ -1,7 +1,3 @@
 #include "json.hpp"
 
-namespace vastina {
-
-
-
-}
+namespace vastina {}
