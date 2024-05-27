@@ -67,6 +67,59 @@ std::string format( const std::string_view& fmt_str, Args&&... args )
 
 #define EXCEPT_ZERO( callee, ... ) tryCall( 0, callee, __VA_ARGS__ )
 
+namespace json {
+
+inline constexpr bool isValidNum( const string_view& num )
+{
+  u32 i = 0;
+  switch ( num[i] ) {
+    case '0': // 0114 is invalid while 0e514 is valid
+      if ( num.size() > 1 ) {
+        if ( num[i + 1] != 'e' )
+          return false;
+      }
+    case '-': // but start with + is invalid
+    case '1' ... '9':
+      i++;
+      break;
+    default:
+      return false;
+  }
+  bool dot { false }; //.
+  bool exp { false }; // e E
+  auto size { num.size() };
+  while ( i < size ) {
+    switch ( num[i] ) {
+      case '.':
+        if ( dot || exp )
+          return false; // . after e and more than one . is invalid
+        dot = true;
+      case '0' ... '9':
+        break;
+      case 'e':
+      case 'E': {
+        if ( dot && num[i - 1] == '.' )
+          return false; // 233.e and more than one e is invalid
+        if ( exp )
+          return false;
+        exp = true;
+        if ( num[i + 1] == '+' || num[i + 1] == '-' )
+          i++;
+        break;
+      }
+      default:
+        return false;
+    }
+    i++;
+  }
+
+  if ( num.back() >= '0' && num.back() <= '9' )
+    return true;
+  return false;
+}
+
+}
+
 }; // namespace vastina
 
 #endif

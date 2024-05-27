@@ -1,7 +1,7 @@
 #include "base/io.hpp"
 #include "base/token.hpp"
-#include "json.hpp"
 #include "base/util.hpp"
+#include "json.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -24,19 +24,12 @@ int main( int argc, char** argv )
     return 3;
   }
 
-  Filer f { Filer( file_name ) };
-  f.Open();
-  f.reader().ReadAllbyLine();
-
-  json::lexer lx {json::lexer(&f)};
+  json::lexer lx { json::lexer( file_name ) };
   lx.Parse();
 
   const auto tks { lx.getTokens() };
   for ( u32 i = 0; i < tks.size(); i++ ) {
-    print( "offset:{}, \ttoken:{} \ttokenid:{}\n",
-           i,
-           tks.at( i ).data_,
-           (i32)tks.at(i).token_ );
+    print( "offset:{}, \ttoken:{} \ttokenid:{}\n", i, tks.at( i ).data_, (i32)tks.at( i ).token_ );
   }
 
   return 0;

@@ -11,11 +11,12 @@ namespace json {
 enum class TOKEN
 {
   String,
-  Number,
+  Integer,
+  Double,
   Comma,  // ,
   Colon,  // :
   Null,   // n
-//  Dquote, // "
+          //  Dquote, // "
   Oparan, // [
   Cparan, // ]
   Obrac,  // {
@@ -27,11 +28,11 @@ enum class TOKEN
 struct token_t
 {
   TOKEN token_;
-  string data_;
+  string_view data_;
   // u32 line_;
   // u32 lineoffset_ {};
 
-  token_t( TOKEN, const string&/*, u32, u32*/ );
+  token_t( TOKEN, const string_view& /*, u32, u32*/ );
 };
 
 class lexer
@@ -47,13 +48,9 @@ public:
 
 private:
   std::vector<token_t> tokens_ {};
-  Filer* buffer_;
-  string current_ {};
+  string buffer_ {};
 
   u32 offset_ {};
-  //u32 line_ { 1 };
-  //u32 lineoffset_ { 1 };
-
   STATE state {};
 
   STATE ParseWhiteSpace();
@@ -62,14 +59,14 @@ private:
 
   // return non-zero mean fail and format error
   i32 ParseNumber();
-  void forSingelWord( TOKEN, const string_view& );
+  void forSingelWord( TOKEN );
 
   STATE Checker();
   STATE NextLine(); // for comment mod
   i32 reScan();
 
 private:
-  void WriteBack();
+  void WriteBack(Filer* writer);
 
 public:
   lexer( const string_view& );
